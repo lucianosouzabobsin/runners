@@ -1,0 +1,24 @@
+version: "2"
+services:
+
+  laravel-runners:
+    container_name: runners
+    image: lucianobobsin/apache-php7.2-cli
+    env_file:
+      - ./devops/.env
+    ports:
+      - 80:80
+    volumes:
+      - ./devops/virtualhost.conf:/etc/apache2/sites-enabled/001-default.conf
+      - ./devops/custom.ini:/etc/php/7.0/apache2/conf.d/custom.ini
+      - ../runners:/var/www/html/runners
+
+    links:
+      - mysql-runners
+
+  mysql-runners:
+    image: lucianobobsin/mysql-5.7
+    ports:
+      - 3306:3306
+    volumes:
+      - /var/docker/volume:/var/lib/mysql
