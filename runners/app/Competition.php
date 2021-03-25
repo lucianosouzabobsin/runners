@@ -18,4 +18,17 @@ class Competition extends Model
         'date' => 'date:Y-m-d',
         'hour_init' => 'date:H:i:s',
     ];
+
+    protected $hidden = ['created_at', 'updated_at'];
+
+    static public function exitsCompetition($data)
+    {
+        $existsCompetition = Competition::where($data)->get()->toArray();
+
+        if(empty($existsCompetition)){
+            return false;
+        }
+
+        return true;
+    }
 }

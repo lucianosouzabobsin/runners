@@ -33,7 +33,7 @@ class RunnerTest extends TestCase
                 [ 'name' => 'Teste 2', 'cpf' => '22222222222', 'birthday' => '1980-03-15' ]
             ])
             ->assertJsonStructure([
-                '*' => ['id', 'name', 'cpf', 'birthday', 'created_at', 'updated_at'],
+                '*' => ['id', 'name', 'cpf', 'birthday'],
             ]);
     }
 
@@ -85,7 +85,7 @@ class RunnerTest extends TestCase
     }
 
     /**
-     * Test Runner save with duplicate cpf.
+     * Test Runner save with emptys.
      *
      * @return void
      */

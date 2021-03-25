@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Runner;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -32,7 +31,7 @@ class RunnerController extends Controller
             return response()->json($runner, 201);
         } catch (\Throwable $th) {
             $error = 'Bad request';
-            if(strpos($th->getMessage(), 'UNIQUE constraint failed: runners.cpf') ){
+            if(strpos($th->getMessage(), 'Integrity constraint violation') ){
                 $error = 'The cpf already registered.';
             }
 
@@ -42,15 +41,17 @@ class RunnerController extends Controller
         }
     }
 
+    /**
+     * Run the validator fields to Runner.
+     *
+     *  @return \Validator
+     */
     private function validateFields($request)
     {
         $validator = Validator::make($request->all(), [
             'name' => ['required'],
             'cpf' => ['required', 'numeric'],
-            'birthday' => [
-                'required',
-                'date_format:"Y-m-d"'
-            ],
+            'birthday' => ['required', 'date_format:"Y-m-d"'],
         ]);
 
         $this->ageAvaliable = Runner::validateBirthday($request->all());

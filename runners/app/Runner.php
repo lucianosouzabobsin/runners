@@ -17,6 +17,8 @@ class Runner extends Model
         'birthday' => 'date:Y-m-d',
     ];
 
+    protected $hidden = ['created_at', 'updated_at'];
+
     static public function validateBirthday($data)
     {
         $date = Carbon::createFromFormat('Y-m-d', $data['birthday']);
