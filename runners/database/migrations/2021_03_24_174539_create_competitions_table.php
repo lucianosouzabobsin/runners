@@ -16,8 +16,10 @@ class CreateCompetitionsTable extends Migration
         Schema::create('competitions', function (Blueprint $table) {
             $table->id();
             $table->enum('type', [3, 5, 10, 21, 42]);
-            $table->char('date', 10);
-            $table->char('hour_init', 5);
+            $table->timestamp('date');
+            $table->char('hour_init', 8);
+            $table->integer('min_age');
+            $table->integer('max_age');
             $table->timestamps();
         });
     }

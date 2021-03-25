@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::post('add.runner', 'RunnerController@store');
+Route::post('add.competition', 'CompetitionController@store');
+Route::get('list.runner', 'RunnerController@index');
+Route::get('list.competition', 'CompetitionController@index');
+Route::get('list', 'RunnerCompetitionController@index');

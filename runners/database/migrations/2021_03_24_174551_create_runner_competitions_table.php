@@ -16,9 +16,7 @@ class CreateRunnerCompetitionsTable extends Migration
         Schema::create('runner_competitions', function (Blueprint $table) {
             $table->foreignId('runner_id')->constrained();
             $table->foreignId('competition_id')->constrained();
-            $table->char('hour_end', 5)->nullable()->default(null);
-            $table->integer('position')->nullable()->default(null);
-            $table->primary(['runner_id', 'competition_id']);
+            $table->char('hour_end', 8);
             $table->timestamps();
         });
     }

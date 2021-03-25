@@ -16,8 +16,8 @@ class CreateRunnersTable extends Migration
         Schema::create('runners', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->char('cpf', 11);
-            $table->char('birthday', 10);
+            $table->char('cpf', 11)->unique();
+            $table->timestamp('birthday');
             $table->timestamps();
         });
     }
