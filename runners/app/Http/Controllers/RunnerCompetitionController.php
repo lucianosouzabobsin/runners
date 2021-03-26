@@ -20,11 +20,16 @@ class RunnerCompetitionController extends Controller
                 ], 404);
             }
 
-            $runnerCompetition = RunnerCompetition::create($request->all());
+            $inputs = $request->all();
+
+            $inputs['runner_age'] = $provider->getRunnerAge();
+            $inputs['trial_time'] = $provider->getTimeCompetition();
+
+            $runnerCompetition = RunnerCompetition::create($inputs);
 
             return response()->json($runnerCompetition, 201);
         } catch (\Throwable $th) {
-            $error = $th->getMessage();
+            $error = 'Bad request';
 
             return response()->json([
                 'error' => $error

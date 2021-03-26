@@ -31,4 +31,19 @@ class Competition extends Model
 
         return true;
     }
+
+    static public function getCompetitions()
+    {
+        return Competition::select('id')->get()->toArray();
+    }
+
+    static public function getRangeAges()
+    {
+        return Competition::select('min_age', 'max_age')->distinct()->get()->toArray();
+    }
+
+    static public function getTypes()
+    {
+        return Competition::select('type')->distinct()->get()->toArray();
+    }
 }

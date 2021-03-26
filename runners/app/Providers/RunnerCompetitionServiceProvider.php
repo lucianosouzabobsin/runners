@@ -16,6 +16,8 @@ class RunnerCompetitionServiceProvider extends ServiceProvider
     private $ableRunnerByDate = false;
     private $ableRunnerByHour = false;
     private $ableRunnerByAge = false;
+    public $timeCompetition = "00:00:00";
+    public $runnerAge = "0";
 
     /**
      * Create a new service provider instance.
@@ -79,6 +81,7 @@ class RunnerCompetitionServiceProvider extends ServiceProvider
 
             if (in_array($runner['age'], range($competition[0]['min_age'], $competition[0]['max_age']))) {
                 $this->ableRunnerByAge = true;
+                $this->runnerAge = $runner['age'];
             }
 
             $this->ableRunnerByDate = RunnerCompetition::canRunOnDate($runner['id'], $competition[0]['date']);
@@ -120,6 +123,18 @@ class RunnerCompetitionServiceProvider extends ServiceProvider
             return false;
         }
 
+        $this->timeCompetition = $difference;
+
         return true;
+    }
+
+    public function getRunnerAge()
+    {
+        return $this->runnerAge;
+    }
+
+    public function getTimeCompetition()
+    {
+        return $this->timeCompetition;
     }
 }
