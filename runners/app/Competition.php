@@ -21,7 +21,7 @@ class Competition extends Model
 
     protected $hidden = ['created_at', 'updated_at'];
 
-    static public function exitsCompetition($data)
+    static public function existCompetition($data)
     {
         $existsCompetition = Competition::where($data)->get()->toArray();
 

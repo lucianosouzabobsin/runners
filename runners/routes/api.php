@@ -20,6 +20,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('add.runner', 'RunnerController@store');
 Route::post('add.competition', 'CompetitionController@store');
+Route::post('add.runner.competition', 'RunnerCompetitionController@store');
 Route::get('list.runner', 'RunnerController@index');
 Route::get('list.competition', 'CompetitionController@index');
-Route::get('list', 'RunnerCompetitionController@index');

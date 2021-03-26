@@ -8,7 +8,7 @@ use Tests\TestCase;
 class CompetitionTest extends TestCase
 {
     /**
-     * Test Runners are listed correctly.
+     * Test Competitions are listed correctly.
      *
      * @return void
      */
@@ -97,7 +97,6 @@ class CompetitionTest extends TestCase
             'min_age' => '18',
             'max_age' => '25'
         ]);
-
 
         $payload = [
             'type' => '3',

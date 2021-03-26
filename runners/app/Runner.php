@@ -2,7 +2,6 @@
 
 namespace App;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Runner extends Model
@@ -19,15 +18,18 @@ class Runner extends Model
 
     protected $hidden = ['created_at', 'updated_at'];
 
-    static public function validateBirthday($data)
+    static public function getWithAge($id)
     {
-        $date = Carbon::createFromFormat('Y-m-d', $data['birthday']);
-        $age = $date->diffInYears(Carbon::now());
+        $runner = Runner::select('*')->
+        selectRaw("TIMESTAMPDIFF (YEAR, birthday,CURDATE()) as age")
+        ->where('id', $id)
+        ->get()
+        ->toArray();
 
-        if($age >= 18) {
-            return true;
+        if(!empty($runner)){
+            return $runner[0];
         }
 
-        return false;
+        return $runner;
     }
 }
