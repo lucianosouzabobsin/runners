@@ -129,7 +129,7 @@ Você pode usar o Postman para utilizar esta API.
 
 ## Links
 
-Link do ambiente Docker e Mysql utilizado:
+Link do ambiente Docker montado com Apache, PHP7.2 e Mysql utilizado:
 * [**lucianobobsin/apache-php7.2-cli**](https://hub.docker.com/repository/docker/lucianobobsin/apache-php7.2-cli)
 * [**lucianobobsin/mysql-5.7**](https://hub.docker.com/repository/docker/lucianobobsin/mysql-5.7)
  
