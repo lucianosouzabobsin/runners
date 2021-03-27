@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Competition;
 use App\RunnerCompetition;
 use Illuminate\Support\ServiceProvider;
 

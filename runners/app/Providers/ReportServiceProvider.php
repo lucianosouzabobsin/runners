@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Competition;
-use App\RunnerCompetition;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 
