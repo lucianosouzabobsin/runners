@@ -101,7 +101,6 @@ class ReportServiceProvider extends ServiceProvider
     private function validateType()
     {
         if (isset($this->request['type'])) {
-
             $types = [];
             foreach ($this->typesBase as $type) {
                 array_push($types, $type['type']);
