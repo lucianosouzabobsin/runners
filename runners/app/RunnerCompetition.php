@@ -38,18 +38,10 @@ class RunnerCompetition extends Model
         return true;
     }
 
-    static public function getByCompetition($competition)
-    {
-        return RunnerCompetition::select('*')
-        ->where('competition_id', $competition)
-        ->orderBy('trial_time', 'ASC')
-        ->get()
-        ->toArray();
-    }
-
-    static public function getByRangeAgeAndType()
+    static public function getByAgeTypeTrial()
     {
         return RunnerCompetition::select('runner_competitions.id',
+        'runner_competitions.competition_id',
         'runner_competitions.trial_time',
         'competitions.type',
         'competitions.min_age',

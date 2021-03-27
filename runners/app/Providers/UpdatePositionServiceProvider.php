@@ -8,6 +8,13 @@ use Illuminate\Support\ServiceProvider;
 
 class UpdatePositionServiceProvider extends ServiceProvider
 {
+    private $currentCompetition = 0;
+    private $currentType = 0;
+    private $currentAge = 0;
+    private $positionCompetition = 0;
+    private $positionRangeAgeType = 0;
+    private $positionRangeAge = 0;
+
     /**
      * Create a new service provider instance.
      *
@@ -25,60 +32,47 @@ class UpdatePositionServiceProvider extends ServiceProvider
      */
     public function run()
     {
-        $this->updatePositionsCompetitions();
-        $this->updatePositionsRangeAgeAndType();
-    }
+        $runnerscompetitionsBase = RunnerCompetition::getByAgeTypeTrial();
 
-    private function updatePositionsCompetitions()
-    {
-        $competitionsBase = Competition::getCompetitions();
-
-        foreach ($competitionsBase as $competition) {
-            $runnerscompetitionsBase = RunnerCompetition::getByCompetition($competition['id']);
-            $this->updatePositionsByCompetitions($runnerscompetitionsBase);
-        }
-    }
-
-    private function updatePositionsByCompetitions($runnerscompetitionsBase)
-    {
-        $position = 1;
         foreach ($runnerscompetitionsBase as $competition) {
-            $runnerResult = RunnerCompetition::findOrFail($competition['id']);
-            $runnerResult->position_competition = $position;
-            $runnerResult->save();
-
-            $position++;
+            $this->resetVariableControl($competition);
+            $this->updatePositions($competition['id']);
+            $this->incrementVariablesPositions();
         }
     }
 
-    private function updatePositionsRangeAgeAndType()
+    private function resetVariableControl($competition)
     {
-        $runnerscompetitionsBase = RunnerCompetition::getByRangeAgeAndType();
-
-        $currentType = 0;
-        $currentAge = 0;
-        $positionRangeAgeType = 0;
-        $positionRangeAge = 0;
-        foreach ($runnerscompetitionsBase as $competition) {
-
-            if ($competition['type'] != $currentType) {
-                $positionRangeAgeType = 1;
-                $currentType = $competition['type'];
-            }
-
-            if ($competition['min_age'] != $currentAge) {
-                $positionRangeAge = 1;
-                $currentAge = $competition['min_age'];
-            }
-
-            $runnerResult = RunnerCompetition::findOrFail($competition['id']);
-
-            $runnerResult->position_range_age = $positionRangeAge;
-            $runnerResult->position_range_age_type = $positionRangeAgeType;
-            $runnerResult->save();
-
-            $positionRangeAge++;
-            $positionRangeAgeType++;
+        if ($competition['type'] != $this->currentType) {
+            $this->positionRangeAgeType = 1;
+            $this->currentType = $competition['type'];
         }
+
+        if ($competition['min_age'] != $this->currentAge) {
+            $this->positionRangeAge = 1;
+            $this->currentAge = $competition['min_age'];
+        }
+
+        if ($competition['competition_id'] != $this->currentCompetition) {
+            $this->positionCompetition = 1;
+            $this->currentCompetition = $competition['competition_id'];
+        }
+    }
+
+    private function incrementVariablesPositions()
+    {
+        $this->positionCompetition++;
+        $this->positionRangeAge++;
+        $this->positionRangeAgeType++;
+    }
+
+    private function updatePositions($id)
+    {
+        $runnerResult = RunnerCompetition::findOrFail($id);
+
+        $runnerResult->position_competition = $this->positionCompetition;
+        $runnerResult->position_range_age = $this->positionRangeAge;
+        $runnerResult->position_range_age_type = $this->positionRangeAgeType;
+        $runnerResult->save();
     }
 }
