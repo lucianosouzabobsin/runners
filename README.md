@@ -104,27 +104,27 @@ Você pode usar o Postman para utilizar esta API.
 
 #### Request (por tipo)
 
-`POST /api/report.get.list/`
+`GET /api/report.get.list/`
 
-    curl --location --request POST 'http://runners.local/api/report.get.list?type=10' \ --header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
+    curl --location --request GET 'http://runners.local/api/report.get.list?type=10' \ --header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
 
 #### Request (por tipo e idade)
 
-`POST /api/report.get.list/`
+`GET /api/report.get.list/`
 
-    curl --location --request POST 'http://runners.local/api/report.get.list?range_age=18,25&type=10' \ --header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
+    curl --location --request GET 'http://runners.local/api/report.get.list?range_age=18,25&type=10' \ --header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
 
 #### Request (por prova)
 
-`POST /api/report.get.list/`
+`GET /api/report.get.list/`
 
-    curl --location --request POST 'http://runners.local/api/report.get.list?competition=1' \ --header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
+    curl --location --request GET 'http://runners.local/api/report.get.list?competition=1' \ --header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
 
 #### Request (tudo)
 
-`POST /api/report.get.list/`
+`GET /api/report.get.list/`
 
-    curl --location --request POST 'http://runners.local/api/report.get.list' \ --header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
+    curl --location --request GET 'http://runners.local/api/report.get.list' \ --header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
 
 ## Versionamento
 
