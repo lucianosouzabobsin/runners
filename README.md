@@ -2,6 +2,7 @@
 
 Disponibiliza uma API REST que permite o cadastro de corredores, provas, vincular o corredor a prova e seu tempo e listagem com filtros, somente com autorização token.
 Para enviar o token na solicitação, você pode fazer isso enviando um atributo api_token no payload ou como um token no header:
+
 Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT
 
 ## Métodos
@@ -67,8 +68,7 @@ Você pode usar o Postman para utilizar esta API.
 
 `POST /api/add.competition/`
 
-    curl --location --request POST 'http://runners.local/api/add.competition?type=10&date=2021-01-26&hour_init=08:00:00&min_age=18&max_age=25' \
---header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
+    curl --location --request POST 'http://runners.local/api/add.competition?type=10&date=2021-01-26&hour_init=08:00:00&min_age=18&max_age=25' \ --header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
 
 
 ### Listar Provas
@@ -77,8 +77,7 @@ Você pode usar o Postman para utilizar esta API.
 
 `GET /api/list.competition/`
 
-    curl --location --request GET 'http://runners.local/api/list.competition' \
---header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
+    curl --location --request GET 'http://runners.local/api/list.competition' \ --header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
 
 ### Inserir Corredor
 
@@ -86,8 +85,7 @@ Você pode usar o Postman para utilizar esta API.
 
 `POST /api/add.runner/`
 
-    curl --location --request POST 'http://runners.local/api/add.runner?name=Joana&cpf=8888888885&birthday=2001-02-28' \
---header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
+    curl --location --request POST 'http://runners.local/api/add.runner?name=Joana&cpf=8888888885&birthday=2001-02-28' \ --header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
 
 ### Listar Corredores
 
@@ -95,8 +93,7 @@ Você pode usar o Postman para utilizar esta API.
 
 `GET /api/list.runner/`
 
-    curl --location --request GET 'http://runners.local/api/list.runner' \
---header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
+    curl --location --request GET 'http://runners.local/api/list.runner' \ --header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
 
  ### Listar Resultados
 
@@ -105,33 +102,29 @@ Você pode usar o Postman para utilizar esta API.
  range_age - array de duas posições(sendo a primeira com a idade minima e a idade máxima)
  competition - integer
 
-#### Request por tipo
+#### Request (por tipo)
 
 `POST /api/report.get.list/`
 
-    curl --location --request POST 'http://runners.local/api/report.get.list?type=10' \
---header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
+    curl --location --request POST 'http://runners.local/api/report.get.list?type=10' \ --header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
 
-#### Request por tipo e idade
-
-`POST /api/report.get.list/`
-
-    curl --location --request POST 'http://runners.local/api/report.get.list?range_age=18,25&type=10' \
---header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
-
-#### Request por prova
+#### Request (por tipo e idade)
 
 `POST /api/report.get.list/`
 
-    curl --location --request POST 'http://runners.local/api/report.get.list?competition=1' \
---header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
+    curl --location --request POST 'http://runners.local/api/report.get.list?range_age=18,25&type=10' \ --header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
 
-#### Request de tudo
+#### Request (por prova)
 
 `POST /api/report.get.list/`
 
-    curl --location --request POST 'http://runners.local/api/report.get.list' \
---header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
+    curl --location --request POST 'http://runners.local/api/report.get.list?competition=1' \ --header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
+
+#### Request (tudo)
+
+`POST /api/report.get.list/`
+
+    curl --location --request POST 'http://runners.local/api/report.get.list' \ --header 'Authorization: Bearer 0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
 
 ## Versionamento
 
@@ -146,7 +139,3 @@ Link do ambiente Docker montado com Apache, PHP7.2 e Mysql utilizado:
 ## Autor
 
 * **Luciano Bobsin**: @lucianosouzabobsin (https://github.com/lucianosouzabobsin)
-
-
-Please follow github and join us!
-Thanks to visiting me and good coding!
