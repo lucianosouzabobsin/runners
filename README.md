@@ -36,7 +36,7 @@ Requisições para a API devem seguir os verbos:
 ## Getting started
 
 * Para criar o ambiente Docker e o container:
->    $ cd docker/dev
+>    $ cd docker
 * Instale o ambiente:
 >    $ docker-compose up -d
 * Edite o arquivo hosts e adicione a linha abaixo na fila de links para executar como runner.local:
