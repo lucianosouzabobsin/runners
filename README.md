@@ -47,13 +47,15 @@ Requisições para a API devem seguir os verbos:
 >    $ docker exec -it runners bash
 * Dentro do bash, execute os seguintes comandos para criar o banco de dados e suas migrations e seeders:
 >    $ chmod 777 -R runners/
+>    
 >    $ cd runners/
 >
 >    $ php artisan db:create
 >
->	   $ php artisan migrate
+>	 $ php artisan migrate
 >
->	   $ php artisan db:seed
+>	 $ php artisan db:seed
+>	 
 * Checar os testes (se quiser)
 >    $ composer tests
 
