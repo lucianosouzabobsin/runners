@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Providers\ReportServiceProvider;
 use App\Providers\UpdatePositionServiceProvider;
+use App\Rules\CompetitionExists;
+use App\Rules\RangeAgeAvaliable;
+use App\Rules\TypeInTypes;
 use App\RunnerCompetition;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ReportController extends Controller
 {
@@ -16,8 +20,17 @@ class ReportController extends Controller
 
     public function list(Request $request)
     {
-        $provider = new ReportServiceProvider($request->all());
-        $validator = $provider->validateFields();
+        $inputs = $request->all();
+        if (isset($inputs['range_age'])) {
+            $inputs['range_age'] = explode(",", $inputs['range_age']);
+        }
+
+        $validator = Validator::make($inputs, [
+            'range_age' => ['array','min:2','max:2',new RangeAgeAvaliable],
+            'range_age.*' => ['string','distinct'],
+            'competition' => ['numeric', new CompetitionExists($inputs['competition'])],
+            'type' => ['numeric', new TypeInTypes],
+        ]);
 
         if ($validator->fails()){
             return response()->json([
@@ -25,10 +38,12 @@ class ReportController extends Controller
             ], 404);
         }
 
-        $updaterProvider = new UpdatePositionServiceProvider();
-        $updaterProvider->run();
+        $updaterServiceProvider = new UpdatePositionServiceProvider();
+        $updaterServiceProvider->run();
 
-        $inputs = $provider->getRequestToParams();
+        $reportServiceProvider = new ReportServiceProvider($inputs);
+
+        $inputs = $reportServiceProvider->getRequestToParams();
 
         return RunnerCompetition::report($inputs);
     }

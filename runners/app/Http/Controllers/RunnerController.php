@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Providers\RunnerServiceProvider;
+use App\Rules\AgeGreaterThanEighteen;
 use App\Runner;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 class RunnerController extends Controller
@@ -16,8 +17,11 @@ class RunnerController extends Controller
     public function store(Request $request)
     {
         try {
-            $provider = new RunnerServiceProvider($request->all());
-            $validator = $provider->validateFields();
+            $validator = Validator::make($request->all(), [
+                'name' => ['required'],
+                'cpf' => ['required', 'numeric'],
+                'birthday' => ['required', 'date_format:"Y-m-d"', new AgeGreaterThanEighteen],
+            ]);
 
             if ($validator->fails()){
                 return response()->json([
