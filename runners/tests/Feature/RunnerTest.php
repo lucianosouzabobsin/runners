@@ -2,7 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Runner;
+use App\Models\Runner;
+use App\User;
 use Tests\TestCase;
 
 class RunnerTest extends TestCase
@@ -14,25 +15,30 @@ class RunnerTest extends TestCase
      */
     public function testRunnersAreListedCorrectly()
     {
-        factory(Runner::class)->create([
+        factory(User::class)->create([
+            'name' => 'Administrator',
+            'email' => 'admin@test.com',
+            'password' => '1234',
+            'api_token' => '0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
+        ]);
+
+        factory(Runner::class)->make([
             'name'  => 'Teste 1',
             'cpf'   => '11111111111',
             'birthday' => '1985-03-15'
         ]);
 
-        factory(Runner::class)->create([
+        factory(Runner::class)->make([
             'name'  => 'Teste 2',
             'cpf'   => '22222222222',
             'birthday' => '1980-03-15'
         ]);
 
-        $response = $this->json('GET', '/api/list.runner', [])
-        ->assertStatus(200)
-        ->assertJson([
-                [ 'name' => 'Teste 1', 'cpf' => '11111111111', 'birthday' => '1985-03-15' ],
-                [ 'name' => 'Teste 2', 'cpf' => '22222222222', 'birthday' => '1980-03-15' ]
-            ])
-            ->assertJsonStructure([
+        $token = '0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT';
+        $headers = ['Authorization' => "Bearer $token"];
+
+        $response = $this->json('GET', '/api/list.runner', [], $headers)
+        ->assertStatus(200)->assertJsonStructure([
                 '*' => ['id', 'name', 'cpf', 'birthday'],
             ]);
     }
@@ -44,13 +50,23 @@ class RunnerTest extends TestCase
      */
     public function testsRunnerCreatedCorrectly()
     {
+        factory(User::class)->create([
+            'name' => 'Administrator',
+            'email' => 'admin@test.com',
+            'password' => '1234',
+            'api_token' => '0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
+        ]);
+
         $payload = [
             'name'  => 'Teste Cadastro',
             'cpf'   => '22222222222',
             'birthday' => '1980-03-15'
         ];
 
-        $this->json('POST', '/api/add.runner', $payload)
+        $token = '0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT';
+        $headers = ['Authorization' => "Bearer $token"];
+
+        $this->json('POST', '/api/add.runner', $payload, $headers)
             ->assertStatus(201)
             ->assertJson([
                 'name' => 'Teste Cadastro',
@@ -67,10 +83,11 @@ class RunnerTest extends TestCase
      */
     public function testsRunnerCreatedCpfIncorrectly()
     {
-        factory(Runner::class)->create([
-            'name'  => 'Teste 1',
-            'cpf'   => '11111111111',
-            'birthday' => '1985-03-15'
+        factory(User::class)->create([
+            'name' => 'Administrator',
+            'email' => 'admin@test.com',
+            'password' => '1234',
+            'api_token' => '0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
         ]);
 
         $payload = [
@@ -79,7 +96,11 @@ class RunnerTest extends TestCase
             'birthday' => '1980-03-15'
         ];
 
-        $this->json('POST', '/api/add.runner', $payload)
+        $token = '0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT';
+        $headers = ['Authorization' => "Bearer $token"];
+
+        $this->json('POST', '/api/add.runner', $payload, $headers);
+        $this->json('POST', '/api/add.runner', $payload, $headers)
             ->assertStatus(404)
             ->assertJson(['error' => 'The cpf already registered.']);
     }
@@ -91,13 +112,23 @@ class RunnerTest extends TestCase
      */
     public function testsRunnerCreatedFieldsEmptyIncorrectly()
     {
+        factory(User::class)->create([
+            'name' => 'Administrator',
+            'email' => 'admin@test.com',
+            'password' => '1234',
+            'api_token' => '0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
+        ]);
+
+        $token = '0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT';
+        $headers = ['Authorization' => "Bearer $token"];
+
         $payload = [
             'name'  => '',
             'cpf'   => '11111111111',
             'birthday' => '1980-03-15'
         ];
 
-        $this->json('POST', '/api/add.runner', $payload)
+        $this->json('POST', '/api/add.runner', $payload, $headers)
             ->assertStatus(404);
 
         $payload = [
@@ -106,7 +137,7 @@ class RunnerTest extends TestCase
             'birthday' => '1980-03-15'
         ];
 
-        $this->json('POST', '/api/add.runner', $payload)
+        $this->json('POST', '/api/add.runner', $payload, $headers)
             ->assertStatus(404);
 
         $payload = [
@@ -115,7 +146,7 @@ class RunnerTest extends TestCase
             'birthday' => ''
         ];
 
-        $this->json('POST', '/api/add.runner', $payload)
+        $this->json('POST', '/api/add.runner', $payload, $headers)
             ->assertStatus(404);
 
         $payload = [
@@ -124,7 +155,7 @@ class RunnerTest extends TestCase
             'birthday' => ''
         ];
 
-        $this->json('POST', '/api/add.runner', $payload)
+        $this->json('POST', '/api/add.runner', $payload, $headers)
             ->assertStatus(404);
     }
 }

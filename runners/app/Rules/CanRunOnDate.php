@@ -2,22 +2,33 @@
 
 namespace App\Rules;
 
-use App\Competition;
-use App\Runner;
-use App\RunnerCompetition;
+use App\Services\ServiceCompetition;
+use App\Services\ServiceRunner;
+use App\Services\ServiceRunnerCompetition;
 use Illuminate\Contracts\Validation\Rule;
 
 class CanRunOnDate implements Rule
 {
-    private $request;
+    protected $request;
+    protected $serviceRunner;
+    protected $serviceCompetition;
+    protected $serviceRunnerCompetition;
+
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($request)
+    public function __construct(
+        $request,
+        ServiceRunner $serviceRunner,
+        ServiceCompetition $serviceCompetition,
+        ServiceRunnerCompetition $serviceRunnerCompetition)
     {
         $this->request = $request;
+        $this->serviceRunner = $serviceRunner;
+        $this->serviceCompetition = $serviceCompetition;
+        $this->serviceRunnerCompetition = $serviceRunnerCompetition;
     }
 
     /**
@@ -29,11 +40,11 @@ class CanRunOnDate implements Rule
      */
     public function passes($attribute, $value)
     {
-        $runner = Runner::getWithAge($this->request['runner_id']);
-        $competition = Competition::where('id', $this->request['competition_id'])->get()->toArray();
+        $runner = $this->serviceRunner->getWithAge($this->request['runner_id']);
+        $competition = $this->serviceCompetition->getCompetition($this->request['competition_id']);
 
         if (!empty($runner) && !empty($competition)) {
-            return RunnerCompetition::canRunOnDate($runner['id'], $competition[0]['date']);
+            return $this->serviceRunnerCompetition->canRunOnDate($runner['id'], $competition[0]['date']);
         }
 
         return true;

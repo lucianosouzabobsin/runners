@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\RunnerCompetition;
+use App\Models\RunnerCompetition;
 use Faker\Generator as Faker;
 
 $factory->define(RunnerCompetition::class, function (Faker $faker) {

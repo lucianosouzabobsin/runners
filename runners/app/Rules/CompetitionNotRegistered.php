@@ -2,7 +2,7 @@
 
 namespace App\Rules;
 
-use App\Competition;
+use App\Services\ServiceCompetition;
 use Illuminate\Contracts\Validation\Rule;
 
 class CompetitionNotRegistered implements Rule
@@ -14,10 +14,12 @@ class CompetitionNotRegistered implements Rule
      *
      * @return void
      */
-    public function __construct($request)
+    public function __construct($request, ServiceCompetition $serviceCompetition)
     {
         $this->request = $request;
+        $this->serviceCompetition = $serviceCompetition;
     }
+
 
     /**
      * Determine if the validation rule passes.
@@ -28,7 +30,7 @@ class CompetitionNotRegistered implements Rule
      */
     public function passes($attribute, $value)
     {
-        return Competition::existCompetition($this->request) == false;
+        return $this->serviceCompetition->existCompetition($this->request) == false;
     }
 
     /**

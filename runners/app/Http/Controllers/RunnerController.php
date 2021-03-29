@@ -4,14 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Rules\AgeGreaterThanEighteen;
 use App\Runner;
+use App\Services\ServiceRunner;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 class RunnerController extends Controller
 {
+    protected $runnerService;
+
+    public function __construct(ServiceRunner $runnerService)
+    {
+        $this->runnerService = $runnerService;
+    }
+
     public function index()
     {
-        return Runner::all();
+        return $this->runnerService->getAll();
     }
 
     public function store(Request $request)
@@ -29,7 +37,7 @@ class RunnerController extends Controller
                 ], 404);
             }
 
-            $runner = Runner::create($request->all());
+            $runner = $this->runnerService->make($request->all());
             return response()->json($runner, 201);
         } catch (\Throwable $th) {
             $error = 'Bad request';

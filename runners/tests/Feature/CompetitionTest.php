@@ -2,7 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Competition;
+use App\Models\Competition;
+use App\User;
 use Tests\TestCase;
 
 class CompetitionTest extends TestCase
@@ -14,6 +15,13 @@ class CompetitionTest extends TestCase
      */
     public function testCompetitionsAreListedCorrectly()
     {
+        factory(User::class)->create([
+            'name' => 'Administrator',
+            'email' => 'admin@test.com',
+            'password' => '1234',
+            'api_token' => '0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
+        ]);
+
         factory(Competition::class)->create([
             'type' => '3',
             'date' =>  '2021-01-15',
@@ -30,8 +38,10 @@ class CompetitionTest extends TestCase
             'max_age' => '25'
         ]);
 
-        $response = $this->json('GET', '/api/list.competition', [])
-        ->assertStatus(200)
+
+        $token = '0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT';
+        $headers = ['Authorization' => "Bearer $token"];
+        $response = $this->json('GET', '/api/list.competition', [], $headers)
         ->assertJson([
                 [
                     'id' => 1,
@@ -55,34 +65,6 @@ class CompetitionTest extends TestCase
             ]);
     }
 
-
-    /**
-     * Test Runner save correctly.
-     *
-     * @return void
-     */
-    public function testsCompetitionCreatedCorrectly()
-    {
-        $payload = [
-            'type' => '3',
-            'date' =>  '2021-01-15',
-            'hour_init' => '08:00:00',
-            'min_age' => '18',
-            'max_age' => '25'
-        ];
-
-        $this->json('POST', '/api/add.competition', $payload)
-            ->assertStatus(201)
-            ->assertJson([
-                'type' => '3',
-                'date' =>  '2021-01-15',
-                'hour_init' => '08:00:00',
-                'min_age' => '18',
-                'max_age' => '25'
-                ]
-            );
-    }
-
     /**
      * Test Runner save with duplicate cpf.
      *
@@ -90,7 +72,14 @@ class CompetitionTest extends TestCase
      */
     public function testsCompetitionCreatedDuplicityIncorrectly()
     {
-        factory(Competition::class)->create([
+        factory(User::class)->create([
+            'name' => 'Administrator',
+            'email' => 'admin@test.com',
+            'password' => '1234',
+            'api_token' => '0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
+        ]);
+
+        factory(Competition::class)->make([
             'type' => '3',
             'date' =>  '2021-01-15',
             'hour_init' => '08:00:00',
@@ -106,7 +95,10 @@ class CompetitionTest extends TestCase
             'max_age' => '25'
         ];
 
-        $this->json('POST', '/api/add.competition', $payload)
+        $token = '0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT';
+        $headers = ['Authorization' => "Bearer $token"];
+
+        $this->json('POST', '/api/add.competition', $payload, $headers)
             ->assertStatus(404);
     }
 
@@ -117,6 +109,16 @@ class CompetitionTest extends TestCase
      */
     public function testsCompetitionCreatedFieldsEmptyIncorrectly()
     {
+        factory(User::class)->create([
+            'name' => 'Administrator',
+            'email' => 'admin@test.com',
+            'password' => '1234',
+            'api_token' => '0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
+        ]);
+
+        $token = '0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT';
+        $headers = ['Authorization' => "Bearer $token"];
+
         $payload = [
             'type' => '',
             'date' =>  '2021-01-15',
@@ -125,7 +127,7 @@ class CompetitionTest extends TestCase
             'max_age' => '25'
         ];
 
-        $this->json('POST', '/api/add.competition', $payload)
+        $this->json('POST', '/api/add.competition', $payload, $headers)
             ->assertStatus(404);
 
         $payload = [
@@ -136,7 +138,7 @@ class CompetitionTest extends TestCase
             'max_age' => '25'
         ];
 
-        $this->json('POST', '/api/add.competition', $payload)
+        $this->json('POST', '/api/add.competition', $payload, $headers)
             ->assertStatus(404);
 
         $payload = [
@@ -147,7 +149,7 @@ class CompetitionTest extends TestCase
             'max_age' => '25'
         ];
 
-        $this->json('POST', '/api/add.competition', $payload)
+        $this->json('POST', '/api/add.competition', $payload, $headers)
             ->assertStatus(404);
 
         $payload = [
@@ -158,7 +160,7 @@ class CompetitionTest extends TestCase
             'max_age' => '25'
         ];
 
-        $this->json('POST', '/api/add.competition', $payload)
+        $this->json('POST', '/api/add.competition', $payload, $headers)
             ->assertStatus(404);
 
 
@@ -170,8 +172,7 @@ class CompetitionTest extends TestCase
             'max_age' => ''
         ];
 
-        $this->json('POST', '/api/add.competition', $payload)
+        $this->json('POST', '/api/add.competition', $payload, $headers)
             ->assertStatus(404);
     }
-
 }

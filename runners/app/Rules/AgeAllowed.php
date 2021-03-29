@@ -2,21 +2,29 @@
 
 namespace App\Rules;
 
-use App\Competition;
-use App\Runner;
+use App\Services\ServiceCompetition;
+use App\Services\ServiceRunner;
 use Illuminate\Contracts\Validation\Rule;
 
 class AgeAllowed implements Rule
 {
-    private $request;
+    protected $request;
+    protected $serviceRunner;
+    protected $serviceCompetition;
+
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($request)
+    public function __construct(
+        $request,
+        ServiceRunner $serviceRunner,
+        ServiceCompetition $serviceCompetition)
     {
         $this->request = $request;
+        $this->serviceRunner = $serviceRunner;
+        $this->serviceCompetition = $serviceCompetition;
     }
 
     /**
@@ -28,8 +36,8 @@ class AgeAllowed implements Rule
      */
     public function passes($attribute, $value)
     {
-        $runner = Runner::getWithAge($this->request['runner_id']);
-        $competition = Competition::where('id', $this->request['competition_id'])->get()->toArray();
+        $runner = $this->serviceRunner->getWithAge($this->request['runner_id']);
+        $competition = $this->serviceCompetition->getCompetition($this->request['competition_id']);
 
         if (!empty($runner) && !empty($competition)) {
             return in_array($runner['age'], range($competition[0]['min_age'], $competition[0]['max_age']));

@@ -2,23 +2,24 @@
 
 namespace App\Rules;
 
-use App\Competition;
+use App\Services\ServiceCompetition;
 use Illuminate\Contracts\Validation\Rule;
 
 class TypeInTypes implements Rule
 {
-    private $typesBase;
-    private $messageErrorTypes;
+    protected $messageErrorTypes;
+    protected $serviceCompetition;
 
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(ServiceCompetition $serviceCompetition)
     {
-
+        $this->serviceCompetition = $serviceCompetition;
     }
+
 
     /**
      * Determine if the validation rule passes.
@@ -29,10 +30,10 @@ class TypeInTypes implements Rule
      */
     public function passes($attribute, $value)
     {
-        $this->typesBase = Competition::getTypes();
+        $typesBase = $this->serviceCompetition->getTypes();
 
         $types = [];
-        foreach ($this->typesBase as $type) {
+        foreach ($typesBase as $type) {
             array_push($types, $type['type']);
         }
 

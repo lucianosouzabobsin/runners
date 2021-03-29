@@ -2,20 +2,23 @@
 
 namespace App\Rules;
 
-use App\Competition;
+use App\Services\ServiceCompetition;
 use Illuminate\Contracts\Validation\Rule;
 
 class CompetitionExists implements Rule
 {
-    private $competitionId;
+    protected $competitionId;
+    protected $serviceCompetition;
+
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($id)
+    public function __construct($id, ServiceCompetition $serviceCompetition)
     {
         $this->competitionId = $id;
+        $this->serviceCompetition = $serviceCompetition;
     }
 
     /**
@@ -27,7 +30,11 @@ class CompetitionExists implements Rule
      */
     public function passes($attribute, $value)
     {
-        $competition = Competition::where('id', $this->competitionId)->get()->toArray();
+        if($this->competitionId == '0'){
+            return true;
+        }
+
+        $competition = $this->serviceCompetition->getCompetition($this->competitionId);
         return !empty($competition);
     }
 

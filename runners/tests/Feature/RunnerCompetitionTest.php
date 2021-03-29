@@ -2,8 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Competition;
-use App\Runner;
+use App\Models\Competition;
+use App\Models\Runner;
+use App\User;
 use Tests\TestCase;
 
 class RunnerCompetitionTest extends TestCase
@@ -15,13 +16,20 @@ class RunnerCompetitionTest extends TestCase
      */
     public function testsRunnerCompetitionCreatedIncorrectly()
     {
-        factory(Runner::class)->create([
+        factory(User::class)->create([
+            'name' => 'Administrator',
+            'email' => 'admin@test.com',
+            'password' => '1234',
+            'api_token' => '0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
+        ]);
+
+        factory(Runner::class)->make([
             'name'  => 'Teste 1',
             'cpf'   => '11111111111',
             'birthday' => '2000-03-15'
         ]);
 
-        factory(Competition::class)->create([
+        factory(Competition::class)->make([
             'type' => '3',
             'date' =>  '2021-01-15',
             'hour_init' => '08:00:00',
@@ -35,7 +43,10 @@ class RunnerCompetitionTest extends TestCase
             'hour_end' => '09:00:00'
         ];
 
-        $this->json('POST', '/api/add.runner.competition', $payload)
+        $token = '0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT';
+        $headers = ['Authorization' => "Bearer $token"];
+
+        $this->json('POST', '/api/add.runner.competition', $payload, $headers)
             ->assertStatus(404);
     }
 }
