@@ -2,20 +2,22 @@
 
 namespace App\Rules;
 
-use App\Runner;
+use App\Services\ServiceRunner;
 use Illuminate\Contracts\Validation\Rule;
 
 class RunnerExists implements Rule
 {
-    private $request;
+    protected $runnerService;
+    protected $request;
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($request)
+    public function __construct($request, ServiceRunner $runnerService)
     {
         $this->request = $request;
+        $this->runnerService = $runnerService;
     }
 
     /**
@@ -27,7 +29,7 @@ class RunnerExists implements Rule
      */
     public function passes($attribute, $value)
     {
-        $runner = Runner::getWithAge($this->request['runner_id']);
+        $runner = $this->runnerService->getWithAge($this->request['runner_id']);
         return !empty($runner);
     }
 

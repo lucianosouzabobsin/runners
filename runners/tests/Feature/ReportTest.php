@@ -2,9 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Competition;
-use App\Runner;
-use App\RunnerCompetition;
+use App\Models\Competition;
+use App\Models\Runner;
+use App\Models\RunnerCompetition;
+use App\User;
 use Tests\TestCase;
 
 class ReportTest extends TestCase
@@ -14,8 +15,15 @@ class ReportTest extends TestCase
      *
      * @return void
      */
-    public function testRunnersAreListedCorrectly()
+    public function testRunnersResultsAreListedCorrectly()
     {
+        factory(User::class)->create([
+            'name' => 'Administrator',
+            'email' => 'admin@test.com',
+            'password' => '1234',
+            'api_token' => '0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT'
+        ]);
+
         factory(Runner::class)->create([
             'name'  => 'Teste 3',
             'cpf'   => '11111111113',
@@ -36,35 +44,11 @@ class ReportTest extends TestCase
             'hour_end' => '09:00:01'
         ]);
 
-        factory(RunnerCompetition::class)->create([
-            'runner_id'  => '2',
-            'competition_id' => '1',
-            'hour_end' => '09:00:00'
-        ]);
 
-        factory(RunnerCompetition::class)->create([
-            'runner_id'  => '1',
-            'competition_id' => '1',
-            'hour_end' => '09:00:03'
-        ]);
+        $token = '0syHnl0Y9jOIfszq11EC2CBQwCfObmvscrZYo5o2ilZPnohvndH797nDNyAT';
+        $headers = ['Authorization' => "Bearer $token"];
 
-
-        $response = $this->json('POST', '/api/report.get.list', [])
-        ->assertStatus(200)
-        ->assertJsonStructure([
-                '*' => [
-                        'competition_id',
-                        'type',
-                        'runner_id',
-                        'min_age',
-                        'max_age',
-                        'name',
-                        'runner_age',
-                        'trial_time',
-                        'position_competition',
-                        'position_range_age',
-                        'position_range_age_type'
-                    ],
-            ]);
+        $response = $this->json('GET', '/api/report.get.list', [], $headers)
+        ->assertStatus(200);
     }
 }

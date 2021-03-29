@@ -2,21 +2,22 @@
 
 namespace App\Rules;
 
-use App\Competition;
+use App\Services\ServiceCompetition;
 use Illuminate\Contracts\Validation\Rule;
 
 class RangeAgeAvaliable implements Rule
 {
-    private $messageErrorRangeAge;
+    protected $messageErrorRangeAge;
+    protected $serviceCompetition;
 
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(ServiceCompetition $serviceCompetition)
     {
-
+        $this->serviceCompetition = $serviceCompetition;
     }
 
     /**
@@ -28,13 +29,14 @@ class RangeAgeAvaliable implements Rule
      */
     public function passes($attribute, $value)
     {
+        $rangesAgesBase = $this->serviceCompetition->getRangeAges();
         if (!isset($value[1])) {
             $value[1] = '0';
         }
 
         $min_age = trim($value[0]);
         $max_age = trim($value[1]);
-        $rangesAgesBase = Competition::getRangeAges();
+
 
         foreach ($rangesAgesBase as $range) {
             $this->messageErrorRangeAge .= sprintf(' %d,%d or',$range['min_age'], $range['max_age']);

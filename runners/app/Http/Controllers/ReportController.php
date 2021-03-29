@@ -2,20 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\Providers\ReportServiceProvider;
-use App\Providers\UpdatePositionServiceProvider;
 use App\Rules\CompetitionExists;
 use App\Rules\RangeAgeAvaliable;
 use App\Rules\TypeInTypes;
-use App\RunnerCompetition;
+use App\Services\ServiceCompetition;
+use App\Services\ServiceReport;
+use App\Services\ServiceRunner;
+use App\Services\ServiceRunnerCompetition;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class ReportController extends Controller
 {
-    public function index()
+    protected $runnerCompetitionService;
+    protected $runnerService;
+    protected $competitionService;
+    protected $reportService;
+
+    public function __construct(
+        ServiceRunnerCompetition $runnerCompetitionService,
+        ServiceRunner $runnerService,
+        ServiceCompetition $competitionService,
+        ServiceReport $reportService)
     {
-        return RunnerCompetition::all();
+        $this->runnerCompetitionService = $runnerCompetitionService;
+        $this->runnerService = $runnerService;
+        $this->competitionService = $competitionService;
+        $this->reportService = $reportService;
     }
 
     public function list(Request $request)
@@ -25,11 +38,24 @@ class ReportController extends Controller
             $inputs['range_age'] = explode(",", $inputs['range_age']);
         }
 
+        if (!isset($inputs['competition'])) {
+            $inputs['competition'] = '0';
+        }
+
         $validator = Validator::make($inputs, [
-            'range_age' => ['array','min:2','max:2',new RangeAgeAvaliable],
+            'range_age' => [
+                'array',
+                'min:2','max:2',
+                new RangeAgeAvaliable($this->competitionService)
+            ],
             'range_age.*' => ['string','distinct'],
-            'competition' => ['numeric', new CompetitionExists($inputs['competition'])],
-            'type' => ['numeric', new TypeInTypes],
+            'competition' => [
+                'numeric',
+                new CompetitionExists(
+                    $inputs['competition'],
+                    $this->competitionService
+                )],
+            'type' => ['numeric', new TypeInTypes($this->competitionService)],
         ]);
 
         if ($validator->fails()){
@@ -38,13 +64,9 @@ class ReportController extends Controller
             ], 404);
         }
 
-        $updaterServiceProvider = new UpdatePositionServiceProvider();
-        $updaterServiceProvider->run();
+        $this->runnerCompetitionService->updateAllPositions();
+        $inputs = $this->reportService->getRequestToParams($inputs);
 
-        $reportServiceProvider = new ReportServiceProvider($inputs);
-
-        $inputs = $reportServiceProvider->getRequestToParams();
-
-        return RunnerCompetition::report($inputs);
+        return $this->runnerCompetitionService->report($inputs);
     }
 }

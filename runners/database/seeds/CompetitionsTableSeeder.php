@@ -1,6 +1,6 @@
 <?php
 
-use App\Competition;
+use App\Models\Competition;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Schema;
 
