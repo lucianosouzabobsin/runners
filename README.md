@@ -39,14 +39,9 @@ Requisições para a API devem seguir os verbos:
 >    $ cd docker
 * Instale o ambiente:
 >    $ docker-compose up -d
-* Edite o arquivo hosts e adicione a linha abaixo na fila de links para executar como runner.local:
->    $ sudo nano /etc/hosts
->
->    127.0.1.1       runners.local
 * Acesse o bash do container:
 >    $ docker exec -it runners bash
 * Dentro do bash, execute os seguintes comandos para criar o banco de dados e suas migrations e seeders:
->    $ chmod 777 -R runners/
 >    
 >    $ cd runners/
 >
